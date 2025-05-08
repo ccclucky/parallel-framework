@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>并行框架性能对比测试报告</title>
+    <style>
+        body { font-family: 'Microsoft YaHei', Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; background-color: #fff; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #2980b9; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px 15px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        .improvement { color: #27ae60; font-weight: bold; }
+        .degradation { color: #e74c3c; font-weight: bold; }
+        .chart-container { width: 100%; height: 400px; margin: 20px 0; }
+        .success-rate { font-size: 24px; font-weight: bold; margin: 20px 0; }
+        .success-rate .rate { color: #27ae60; }
+        .throughput { font-size: 24px; font-weight: bold; margin: 20px 0; }
+        .throughput .rate { color: #2980b9; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>并行框架与单线程字符串反转性能对比报告</h1>
+        <h2>测试配置</h2>
+        <table>
+            <tr><th>配置项</th><th>值</th></tr>
+            <tr><td>测试数据目录</td><td>test-data</td></tr>
+            <tr><td>测试开始时间</td><td>2025-05-08 18:03:20</td></tr>
+            <tr><td>测试结束时间</td><td>2025-05-08 18:05:00</td></tr>
+            <tr><td>总任务数</td><td>200</td></tr>
+            <tr><td>并行任务数</td><td>10</td></tr>
+            <tr><td>超时时间</td><td>10 分钟</td></tr>
+            <tr><td>字符串最小长度</td><td>10 字符</td></tr>
+            <tr><td>字符串最大长度</td><td>200 字符</td></tr>
+            <tr><td>验证结果</td><td>是</td></tr>
+        </table>
+        <h2>任务统计对比</h2>
+        <table>
+            <tr><th>指标</th><th>并行框架</th><th>单线程</th><th>对比</th></tr>
+            <tr><td>成功任务数</td><td>200 (100.00%)</td><td>200 (100.00%)</td><td class="degradation">0.00%</td></tr>
+            <tr><td>失败任务数</td><td>0 (0.00%)</td><td>0 (0.00%)</td><td class="degradation">0.00%</td></tr>
+        </table>
+        <h2>性能指标对比</h2>
+        <div class="success-rate">成功率对比: <span class="rate">并行框架 100.00%</span> vs <span class="rate">单线程 100.00%</span> <span class="degradation">(0.00%)</span></div>
+        <div class="throughput">吞吐量对比: <span class="rate">并行框架 2.00 任务/秒</span> vs <span class="rate">单线程 9.40 任务/秒</span> <span class="degradation">(-78.72%)</span></div>
+        <table>
+            <tr><th>指标</th><th>并行框架</th><th>单线程</th><th>提升比例</th></tr>
+            <tr><td>吞吐量 (任务/秒)</td><td>2.00</td><td>9.40</td><td class="degradation">-78.72%</td></tr>
+            <tr><td>总处理时间</td><td>1.67 分钟</td><td>21.27 秒</td><td class="improvement">78.72%</td></tr>
+            <tr><td>最小处理时间</td><td>4.86 秒</td><td>11 毫秒</td><td class="improvement">99.77%</td></tr>
+            <tr><td>最大处理时间</td><td>5.10 秒</td><td>208 毫秒</td><td class="improvement">95.92%</td></tr>
+            <tr><td>平均处理时间</td><td>5.00 秒</td><td>106 毫秒</td><td class="improvement">97.88%</td></tr>
+            <tr><td>中位数处理时间</td><td>5.00 秒</td><td>110 毫秒</td><td class="improvement">97.80%</td></tr>
+            <tr><td>95%分位处理时间</td><td>5.04 秒</td><td>192 毫秒</td><td class="improvement">96.19%</td></tr>
+        </table>
+        <h2>性能对比图表</h2>
+        <div class="chart-container">
+            <canvas id="taskDistributionChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="throughputChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="timeChart"></canvas>
+        </div>
+        <script>
+            // 任务分布图表
+            var taskDistCtx = document.getElementById('taskDistributionChart').getContext('2d');
+            new Chart(taskDistCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['成功完成', '失败'],
+                    datasets: [{
+                        label: '并行框架',
+                        data: [200, 0],
+                        backgroundColor: '#3498db'
+                    }, {
+                        label: '单线程',
+                        data: [200, 0],
+                        backgroundColor: '#e67e22'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '任务执行结果分布对比'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            // 吞吐量对比图表
+            var ctx1 = document.getElementById('throughputChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['并行框架', '单线程'],
+                    datasets: [{
+                        label: '吞吐量 (任务/秒)',
+                        data: [2.0003400578098276, 9.401588868518779],
+                        backgroundColor: ['#3498db', '#e67e22']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '吞吐量对比 (越高越好)'
+                        },
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            // 处理时间对比图表
+            var ctx2 = document.getElementById('timeChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['最小处理时间', '平均处理时间', '中位数处理时间', '95%分位处理时间', '最大处理时间'],
+                    datasets: [{
+                        label: '并行框架 (毫秒)',
+                        data: [4859, 4996, 4997, 5044, 5103],
+                        backgroundColor: '#3498db'
+                    }, {
+                        label: '单线程 (毫秒)',
+                        data: [11, 106, 110, 192, 208],
+                        backgroundColor: '#e67e22'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '处理时间对比 (越低越好)'
+                        },
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+        <h2>性能测试摘要</h2>
+        <div style="padding: 20px; background-color: #f9f9f9; border-left: 5px solid #3498db;">
+            <p>并行框架相比单线程处理降低了<span class="degradation"> 78.72% </span>的吞吐量。</p>
+            <p>并行框架相比单线程处理节省了<span class="improvement"> 78.72% </span>的总处理时间。</p>
+            <p>并行框架相比单线程处理减少了<span class="improvement"> 97.88% </span>的平均处理时间。</p>
+        </div>
+        <div style="margin-top: 50px; text-align: center; color: #7f8c8d; font-size: 12px;">
+            <p>报告生成时间: 2025-05-08 18:05:00</p>
+            <p>并行计算框架性能测试工具</p>
+        </div>
+    </div>
+</body>
+</html>

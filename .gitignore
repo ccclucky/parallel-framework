@@ -1,0 +1,80 @@
+# 编译输出
+**/target/
+**/bin/
+**/build/
+**/out/
+*.class
+*.jar
+*.war
+*.ear
+
+# IDE文件
+**/.idea/
+**/.vscode/
+**/.eclipse/
+**/*.iml
+**/*.iws
+**/*.ipr
+**/.classpath
+**/.project
+**/.settings/
+**/.factorypath
+
+# Maven
+**/dependency-reduced-pom.xml
+**/pom.xml.tag
+**/pom.xml.releaseBackup
+**/pom.xml.versionsBackup
+**/pom.xml.next
+**/release.properties
+**/.mvn/timing.properties
+
+# 日志文件
+**/logs/
+*.log
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+
+# 系统文件
+.DS_Store
+Thumbs.db
+.directory
+desktop.ini
+
+# 测试生成的数据和报告
+**/parallel-test/
+**/test-data/
+**/reports/
+**/nodes/
+
+# Redis和ZooKeeper临时数据
+*.rdb
+*.aof
+**/zookeeper-*/
+**/redis-*/
+**/snapshots/
+**/data/
+
+# Node.js
+**/node_modules/
+**/package-lock.json
+**/yarn.lock
+**/.npm
+**/.yarn
+
+# 其他临时文件
+*.tmp
+*.bak
+*.swp
+*~
+hs_err_pid*
+
+# 配置文件中可能包含敏感信息
+**/application-*.properties
+**/application-*.yml
+!**/application-example.properties
+!**/application-example.yml
+
+# 测试中生成的临时文件
+**/temp/
