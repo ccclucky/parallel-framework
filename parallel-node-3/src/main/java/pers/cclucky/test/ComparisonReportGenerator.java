@@ -97,8 +97,8 @@ public class ComparisonReportGenerator {
             int parallelTotal = parallelResult.getTotalTasks();
             int singleTotal = singleThreadResult.getTotalTasks();
             double completedImprovement = calculateImprovement(
-                    (double)parallelCompleted / parallelTotal, 
-                    (double)singleCompleted / singleTotal);
+                    (double)singleCompleted / singleTotal,
+                    (double)parallelCompleted / parallelTotal);
             String completedColor = completedImprovement > 0 ? "improvement" : "degradation";
             
             writer.write("            <tr><td>成功任务数</td>");
@@ -126,7 +126,7 @@ public class ComparisonReportGenerator {
             // 摘要指标：成功率和吞吐量
             double parallelSuccessRate = parallelResult.getSuccessRate() * 100;
             double singleSuccessRate = singleThreadResult.getSuccessRate() * 100;
-            double successRateImprovement = parallelSuccessRate - singleSuccessRate;
+            double successRateImprovement = calculateImprovement(singleSuccessRate, parallelSuccessRate);
             String successRateColor = successRateImprovement > 0 ? "improvement" : "degradation";
             
             writer.write("        <div class=\"success-rate\">成功率对比: ");
@@ -457,8 +457,8 @@ public class ComparisonReportGenerator {
             int parallelTotal = parallelResult.getTotalTasks();
             int singleTotal = singleThreadResult.getTotalTasks();
             double completedImprovement = calculateImprovement(
-                    (double)parallelCompleted / parallelTotal, 
-                    (double)singleCompleted / singleTotal);
+                    (double)singleCompleted / singleTotal,
+                    (double)parallelCompleted / parallelTotal);
             
             writer.write(String.format("成功任务数: 并行框架 %d (%s) vs 单线程 %d (%s), 变化: %s%.2f%%\n", 
                     parallelCompleted, formatPercent(parallelCompleted, parallelTotal),
@@ -484,7 +484,7 @@ public class ComparisonReportGenerator {
             
             double parallelSuccessRate = parallelResult.getSuccessRate() * 100;
             double singleSuccessRate = singleThreadResult.getSuccessRate() * 100;
-            double successRateImprovement = parallelSuccessRate - singleSuccessRate;
+            double successRateImprovement = calculateImprovement(singleSuccessRate, parallelSuccessRate);
             
             writer.write(String.format("成功率: 并行框架 %.2f%% vs 单线程 %.2f%%, 变化: %s%.2f%%\n", 
                     parallelSuccessRate, singleSuccessRate,
@@ -590,16 +590,17 @@ public class ComparisonReportGenerator {
             // 防止除零
             return newValue > 0 ? 100 : 0;
         }
-        return ((newValue / oldValue) - 1) * 100;
+        // 计算提升百分比：(新 - 旧) / 旧 * 100
+        return ((newValue - oldValue) / oldValue) * 100;
     }
     
     /**
      * 计算时间差异百分比
-     * @param newTimeMs 新时间（毫秒）
      * @param oldTimeMs 旧时间（毫秒）
+     * @param newTimeMs 新时间（毫秒）
      * @return 时间减少的百分比（正值表示减少，负值表示增加）
      */
-    private static double calculateTimeImprovement(long newTimeMs, long oldTimeMs) {
+    private static double calculateTimeImprovement(long oldTimeMs, long newTimeMs) {
         if (oldTimeMs == 0) {
             // 防止除零
             return newTimeMs < oldTimeMs ? 100 : -100;
@@ -642,6 +643,7 @@ public class ComparisonReportGenerator {
         if (oldThroughput == 0) {
             return newThroughput > 0 ? 100 : 0;
         }
-        return ((newThroughput / oldThroughput) - 1) * 100;
+        // 计算提升百分比：(新 - 旧) / 旧 * 100
+        return ((newThroughput - oldThroughput) / oldThroughput) * 100;
     }
 } 

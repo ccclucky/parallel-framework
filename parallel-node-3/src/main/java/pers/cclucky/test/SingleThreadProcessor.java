@@ -43,7 +43,8 @@ public class SingleThreadProcessor {
                 // 直接在单线程中反转字符串
                 String result = new StringBuilder(testString).reverse().toString();
 
-                Thread.sleep(testString.length());
+                // 模拟处理耗时，与StringReverseTask保持一致
+                Thread.sleep(testString.length() * 10); // 增加到200ms，与并行处理一致
                 
                 long taskEndTime = System.currentTimeMillis();
                 long processingTime = taskEndTime - taskStartTime;

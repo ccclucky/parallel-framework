@@ -63,7 +63,7 @@ public class StringReverseTask implements Task<String, String> {
         String data = slice.getData();
         StringBuilder reversed = new StringBuilder(data).reverse();
         try {
-            Thread.sleep(data.length());
+            Thread.sleep(data.length() * 10);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

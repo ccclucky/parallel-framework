@@ -307,7 +307,7 @@ public class ParallelPerformanceTest {
     public static class TestConfig {
         private String dataDir = "test-data";
         private String reportDir = "test-reports";
-        private int concurrentTasks = 10;
+        private int concurrentTasks = 20;
         private int maxTasks = 1000;
         private int timeoutMinutes = 10;
         private boolean generateData = true;

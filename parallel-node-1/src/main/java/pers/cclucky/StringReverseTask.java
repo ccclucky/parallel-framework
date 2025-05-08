@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class StringReverseTask implements Task<String, String> {
     private String inputString;
-    private int sliceSize = 5; // 每个分片处理的字符数
+    private int sliceSize = 100; // 每个分片处理的字符数
     private String taskId;
 
     // 添加无参构造函数
@@ -62,6 +62,11 @@ public class StringReverseTask implements Task<String, String> {
         // 处理单个分片 - 反转字符串片段
         String data = slice.getData();
         StringBuilder reversed = new StringBuilder(data).reverse();
+        try {
+            Thread.sleep(data.length() * 5);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return reversed.toString();
     }
 

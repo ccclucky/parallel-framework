@@ -26,10 +26,10 @@ public class TestLauncher {
     private static final int DEFAULT_CONCURRENT_TASKS = 10;
     private static final int DEFAULT_MAX_TASKS = 1000;
     private static final int DEFAULT_TIMEOUT_MINUTES = 10;
-    private static final int DEFAULT_FILE_COUNT = 2;
-    private static final int DEFAULT_STRINGS_PER_FILE = 100;
-    private static final int DEFAULT_MIN_STRING_LENGTH = 10;
-    private static final int DEFAULT_MAX_STRING_LENGTH = 200;
+    private static final int DEFAULT_FILE_COUNT = 10;
+    private static final int DEFAULT_STRINGS_PER_FILE = 500;
+    private static final int DEFAULT_MIN_STRING_LENGTH = 100;
+    private static final int DEFAULT_MAX_STRING_LENGTH = 1000;
     private static final boolean DEFAULT_GENERATE_DATA = true;
     private static final boolean DEFAULT_VERIFY_RESULTS = true;
     private static final boolean DEFAULT_GENERATE_REPORT = true;
